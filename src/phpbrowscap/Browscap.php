@@ -237,6 +237,10 @@ class Browscap
         }
 
         $this->cacheDir .= DIRECTORY_SEPARATOR;
+
+        // Fix for closed project
+        $this->doAutoUpdate = false;
+        $this->localFile = __DIR__ . '/../../php_browscap.ini';
     }
 
     /**
