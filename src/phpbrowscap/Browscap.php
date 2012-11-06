@@ -207,6 +207,7 @@ class Browscap
      * if needed updated the definitions
      *
      * @param string $cache_dir
+     * @throws Exception
      */
     public function __construct($cache_dir)
     {
@@ -249,7 +250,7 @@ class Browscap
      * @param string $user_agent  the user agent string
      * @param bool $return_array  whether return an array or an object
      * @throws Exception
-     * @return stdObject  the object containing the browsers details. Array if
+     * @return \stdClass  the object containing the browsers details. Array if
      *                    $return_array is set to true.
      */
     public function getBrowser($user_agent = null, $return_array = false)
@@ -402,9 +403,9 @@ class Browscap
      */
     public function clearProxySettings($wrapper = null)
     {
-        $wrappers = isset($wrapper) ? array($wrappers) : array_keys($this->_streamContextOptions);
+        $wrappers = isset($wrapper) ? array($wrapper) : array_keys($this->_streamContextOptions);
 
-        $affectedProtocols = array();
+        $clearedWrappers = array();
         $options = array('proxy', 'request_fulluri', 'header');
         foreach ($wrappers as $wrapper) {
 
@@ -497,6 +498,7 @@ class Browscap
                 $browsers[$user_agent]['Parent'] = $user_agents_keys[$parent];
             }
 
+            $browser = array();
             foreach ($browsers[$user_agent] as $key => $value) {
                 $key = $properties_keys[$key] . ".0";
                 $browser[$key] = $value;
@@ -522,6 +524,7 @@ class Browscap
     /**
      * Loads the cache into object's properties
      *
+     * @param $cache_file
      * @return void
      */
     protected function _loadCache($cache_file)
@@ -562,6 +565,7 @@ class Browscap
     /**
      * Lazy getter for the stream context resource.
      *
+     * @param bool $recreate
      * @return resource
      */
     protected function _getStreamContext($recreate = false)
